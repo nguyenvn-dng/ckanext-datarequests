@@ -3,7 +3,7 @@
 {% block header_site_navigation_tabs %}
   {{ super() }}
   
-  <li>
+  <li{% if request.environ.PATH_INFO.startswith('/datarequest') %} class="active"{% endif %}>
     <a href="/datarequest">
       {{ _('Data Requests') }}{{ h.get_open_datarequests_badge() }}
     </a>
