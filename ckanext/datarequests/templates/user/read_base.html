@@ -10,7 +10,7 @@
       </a>
     </li>
     <li{% if '/activity' in current_url %} class="active"{% endif %}>
-      <a href="{{ h.url_for('activity.user_activity', id=user.name) }}">
+      <a href="/user/{{ user.name }}/activity">
         <i class="icon-clock-o fa fa-clock-o"></i>
         {{ _('Activity Stream') }}
       </a>
