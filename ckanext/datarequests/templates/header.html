@@ -3,8 +3,8 @@
 {% block header_site_navigation_tabs %}
   {{ super() }}
   
-  <li class="nav-item">
-    <a class="nav-link" href="/datarequest">
+  <li>
+    <a href="/datarequest">
       {{ _('Data Requests') }}{{ h.get_open_datarequests_badge() }}
     </a>
   </li>
