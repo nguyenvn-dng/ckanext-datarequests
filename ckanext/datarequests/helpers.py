@@ -19,7 +19,7 @@
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import db
+from ckanext.datarequests import db
 
 from ckan.common import c
 
@@ -54,3 +54,52 @@ def get_open_datarequests_badge(show_badge):
                                  {'comments_count': get_open_datarequests_number()})
     else:
         return ''
+
+
+def datarequest_url_for(action, **kwargs):
+    '''Helper function to generate URLs for datarequest actions with proper fallback'''
+    from ckanext.datarequests import constants
+    import ckan.lib.helpers as h
+    
+    # Map actions to direct paths to avoid routing issues
+    action_paths = {
+        'index': '/' + constants.DATAREQUESTS_MAIN_PATH,
+        'show': '/' + constants.DATAREQUESTS_MAIN_PATH + '/' + kwargs.get('id', ''),
+        'comment': '/' + constants.DATAREQUESTS_MAIN_PATH + '/comment/' + kwargs.get('id', ''),
+        'new': '/' + constants.DATAREQUESTS_MAIN_PATH + '/new',
+        'update': '/' + constants.DATAREQUESTS_MAIN_PATH + '/edit/' + kwargs.get('id', ''),
+        'delete': '/' + constants.DATAREQUESTS_MAIN_PATH + '/delete/' + kwargs.get('id', ''),
+        'close': '/' + constants.DATAREQUESTS_MAIN_PATH + '/close/' + kwargs.get('id', ''),
+        'follow': '/' + constants.DATAREQUESTS_MAIN_PATH + '/follow/' + kwargs.get('id', ''),
+        'unfollow': '/' + constants.DATAREQUESTS_MAIN_PATH + '/unfollow/' + kwargs.get('id', ''),
+        'delete_comment': '/' + constants.DATAREQUESTS_MAIN_PATH + '/comment/' + kwargs.get('datarequest_id', '') + '/delete/' + kwargs.get('comment_id', ''),
+    }
+    
+    try:
+        # Try Flask-style Blueprint routing first
+        endpoint = 'datarequests.' + action
+        return h.url_for(endpoint, **kwargs)
+    except Exception:
+        # Use direct path construction as fallback
+        if action in action_paths:
+            # Handle special parameters for some actions
+            url = action_paths[action]
+            
+            # Add query parameters if any (like organization for new action)
+            query_params = []
+            for key, value in kwargs.items():
+                if key not in ['id', 'datarequest_id', 'comment_id'] and value:
+                    query_params.append(f"{key}={value}")
+            
+            if query_params:
+                url += '?' + '&'.join(query_params)
+                
+            return url
+        else:
+            # Generic path construction for unknown actions
+            path = '/' + constants.DATAREQUESTS_MAIN_PATH
+            if 'id' in kwargs:
+                path += '/' + action + '/' + kwargs['id']
+            else:
+                path += '/' + action
+            return path

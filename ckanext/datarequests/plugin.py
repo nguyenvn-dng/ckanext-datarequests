@@ -20,15 +20,24 @@
 import ckan.lib.helpers as h
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
-import auth
-import actions
-import constants
-import helpers
+from ckanext.datarequests import actions
+from ckanext.datarequests import auth
+from ckanext.datarequests import constants
+from ckanext.datarequests import db
+from ckanext.datarequests import helpers
 import os
 import sys
 
 from functools import partial
-from pylons import config
+try:
+    from pylons import config
+except ImportError:
+    from ckan.common import config
+
+try:
+    from flask import Blueprint
+except ImportError:
+    Blueprint = None
 
 
 def get_config_bool_value(config_name, default_value=False):
@@ -55,7 +64,10 @@ class DataRequestsPlugin(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IAuthFunctions)
     p.implements(p.IConfigurer)
-    p.implements(p.IRoutes, inherit=True)
+    try:
+        p.implements(p.IRoutes, inherit=True)
+    except AttributeError:
+        p.implements(p.IBlueprint)
     p.implements(p.ITemplateHelpers)
 
     # ITranslation only available in 2.5+
@@ -128,11 +140,18 @@ class DataRequestsPlugin(p.SingletonPlugin):
         # that CKAN will use this plugin's custom templates.
         tk.add_template_directory(config, 'templates')
 
-        # Register this plugin's fanstatic directory with CKAN.
+        # Register this plugin's public directory with CKAN.
         tk.add_public_directory(config, 'public')
 
-        # Register this plugin's fanstatic directory with CKAN.
-        tk.add_resource('fanstatic', 'datarequest')
+        # Register this plugin's assets directory with CKAN.
+        try:
+            # For newer CKAN versions with webassets
+            tk.add_resource('fanstatic', 'datarequest')
+        except Exception:
+            # Fallback for compatibility
+            pass
+
+        # Database initialization will happen lazily when first accessed
 
     ######################################################################
     ############################## IROUTES ###############################
@@ -204,6 +223,113 @@ class DataRequestsPlugin(p.SingletonPlugin):
         return m
 
     ######################################################################
+    ############################ IBLUEPRINT ##############################
+    ######################################################################
+
+    def get_blueprint(self):
+        blueprint = Blueprint('datarequests', __name__)
+        
+        def _make_controller_wrapper(action_name):
+            def wrapper(*args, **kwargs):
+                try:
+                    from ckanext.datarequests.controllers.ui_controller import DataRequestsUI
+                    controller = DataRequestsUI()
+                    method = getattr(controller, action_name)
+                    
+                    # Handle Flask request context
+                    from flask import request, g
+                    import ckan.plugins.toolkit as tk
+                    
+                    # Set up context similar to Pylons
+                    tk.c.user = g.user if hasattr(g, 'user') else None
+                    tk.c.userobj = g.userobj if hasattr(g, 'userobj') else None
+                    
+                    # Monkey patch url_for in helpers to handle old controller URLs
+                    import ckan.lib.helpers as h
+                    original_url_for = h.url_for
+                    
+                    def patched_url_for(*url_args, **url_kwargs):
+                        # Check if this is an old-style datarequest controller call
+                        controller = url_kwargs.get('controller', '')
+                        if 'datarequests.controllers.ui_controller:DataRequestsUI' in controller:
+                            action = url_kwargs.get('action', '')
+                            # Remove controller from kwargs and try Blueprint routing
+                            clean_kwargs = {k: v for k, v in url_kwargs.items() if k not in ['controller', 'action']}
+                            return helpers.datarequest_url_for(action, **clean_kwargs)
+                        else:
+                            return original_url_for(*url_args, **url_kwargs)
+                    
+                    # Temporarily replace url_for
+                    h.url_for = patched_url_for
+                    tk.url_for = patched_url_for
+                    
+                    try:
+                        result = method(*args, **kwargs)
+                    finally:
+                        # Restore original url_for
+                        h.url_for = original_url_for
+                        tk.url_for = original_url_for
+                    
+                    return result
+                except Exception as e:
+                    import logging
+                    log = logging.getLogger(__name__)
+                    log.error('Error in controller wrapper (%s): %s', action_name, e)
+                    from flask import abort
+                    abort(500)
+            return wrapper
+        
+        # Data Requests index
+        blueprint.add_url_rule('/%s' % constants.DATAREQUESTS_MAIN_PATH,
+                             'index', _make_controller_wrapper('index'), methods=['GET'])
+        
+        # Create a Data Request
+        blueprint.add_url_rule('/%s/new' % constants.DATAREQUESTS_MAIN_PATH,
+                             'new', _make_controller_wrapper('new'), methods=['GET', 'POST'])
+        
+        # Show a Data Request
+        blueprint.add_url_rule('/%s/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'show', _make_controller_wrapper('show'), methods=['GET'])
+        
+        # Update a Data Request
+        blueprint.add_url_rule('/%s/edit/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'update', _make_controller_wrapper('update'), methods=['GET', 'POST'])
+        
+        # Delete a Data Request
+        blueprint.add_url_rule('/%s/delete/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'delete', _make_controller_wrapper('delete'), methods=['POST'])
+        
+        # Close a Data Request
+        blueprint.add_url_rule('/%s/close/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'close', _make_controller_wrapper('close'), methods=['GET', 'POST'])
+        
+        # Data Request that belongs to an organization
+        blueprint.add_url_rule('/organization/%s/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'organization_datarequests', _make_controller_wrapper('organization_datarequests'), methods=['GET'])
+        
+        # Data Request that belongs to a user
+        blueprint.add_url_rule('/user/%s/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'user_datarequests', _make_controller_wrapper('user_datarequests'), methods=['GET'])
+        
+        # Follow & Unfollow
+        blueprint.add_url_rule('/%s/follow/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'follow', _make_controller_wrapper('follow'), methods=['POST'])
+        
+        blueprint.add_url_rule('/%s/unfollow/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                             'unfollow', _make_controller_wrapper('unfollow'), methods=['POST'])
+        
+        if self.comments_enabled:
+            # Comment a Data Request
+            blueprint.add_url_rule('/%s/comment/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+                                 'comment', _make_controller_wrapper('comment'), methods=['GET', 'POST'])
+            
+            # Delete comment
+            blueprint.add_url_rule('/%s/comment/<datarequest_id>/delete/<comment_id>' % constants.DATAREQUESTS_MAIN_PATH,
+                                 'delete_comment', _make_controller_wrapper('delete_comment'), methods=['GET', 'POST'])
+        
+        return blueprint
+
+    ######################################################################
     ######################### ITEMPLATESHELPER ###########################
     ######################################################################
 
@@ -215,7 +341,8 @@ class DataRequestsPlugin(p.SingletonPlugin):
             'get_open_datarequests_number': helpers.get_open_datarequests_number,
             'get_open_datarequests_badge': partial(helpers.get_open_datarequests_badge, self._show_datarequests_badge),
             'get_plus_icon': get_plus_icon,
-            'is_following_datarequest': helpers.is_following_datarequest
+            'is_following_datarequest': helpers.is_following_datarequest,
+            'datarequest_url_for': helpers.datarequest_url_for
         }
 
     ######################################################################

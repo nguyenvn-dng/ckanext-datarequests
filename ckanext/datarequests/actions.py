@@ -21,15 +21,18 @@
 import ckan.lib.base as base
 import ckan.model as model
 import ckan.plugins as plugins
-import constants
+from ckanext.datarequests import constants
 import datetime
 import cgi
-import db
+from ckanext.datarequests import db
 import logging
-import validator
+from ckanext.datarequests import validator
 import ckan.lib.mailer as mailer
 
-from pylons import config
+try:
+    from pylons import config
+except ImportError:
+    from ckan.common import config
 
 c = plugins.toolkit.c
 log = logging.getLogger(__name__)

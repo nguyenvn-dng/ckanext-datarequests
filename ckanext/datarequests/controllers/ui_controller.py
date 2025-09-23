@@ -28,7 +28,10 @@ import functools
 import re
 
 from ckan.common import request
-from urllib import urlencode
+try:
+    from urllib import urlencode  # Python 2
+except ImportError:
+    from urllib.parse import urlencode  # Python 3
 
 
 _link = re.compile(r'(?:(https?://)|(www\.))(\S+\b/?)([!"#$%&\'()*+,\-./:;<=>?@[\\\]^_`{|}~]*)(\s|$)', re.I)
@@ -48,7 +51,7 @@ def _get_errors_summary(errors):
 
 
 def _encode_params(params):
-    return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
+    return [(k, v.encode('utf-8') if isinstance(v, str) else str(v))
             for k, v in params]
 
 
@@ -58,28 +61,133 @@ def url_with_params(url, params):
 
 
 def search_url(params):
-    url = helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI',
-                          action='index')
+    try:
+        # Try Flask-style Blueprint routing first
+        url = helpers.url_for('datarequests.index')
+    except Exception:
+        try:
+            # Try alternative naming that matches error message
+            url = helpers.url_for('datarequests.user_datarequests')
+        except Exception:
+            try:
+                # Direct path construction as absolute fallback
+                from ckanext.datarequests import constants
+                url = '/' + constants.DATAREQUESTS_MAIN_PATH
+            except Exception:
+                # Final fallback to Pylons-style controller routing
+                url = helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI',
+                                      action='index')
     return url_with_params(url, params)
 
 
 def org_datarequest_url(params, id):
-    url = helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI',
-                          action='organization_datarequests', id=id)
+    try:
+        # Try Flask-style Blueprint routing first
+        url = helpers.url_for('datarequests.organization_datarequests', id=id)
+    except Exception:
+        # Fallback to Pylons-style controller routing
+        url = helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI',
+                              action='organization_datarequests', id=id)
     return url_with_params(url, params)
 
 
 def user_datarequest_url(params, id):
-    url = helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI',
-                          action='user_datarequests', id=id)
+    try:
+        # Try Flask-style Blueprint routing first
+        url = helpers.url_for('datarequests.user_datarequests', id=id)
+    except Exception:
+        # Fallback to Pylons-style controller routing
+        url = helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI',
+                              action='user_datarequests', id=id)
     return url_with_params(url, params)
 
 
-class DataRequestsUI(base.BaseController):
+try:
+    # For older CKAN versions with BaseController
+    BaseClass = base.BaseController
+except AttributeError:
+    # For newer CKAN versions without BaseController
+    BaseClass = object
+
+
+class DataRequestsUI(BaseClass):
+
+    def _get_request_param(self, param_name, default=None, is_post=False):
+        """Helper function to get request parameters from both Pylons and Flask"""
+        try:
+            if is_post:
+                # Try Pylons style first
+                if hasattr(request, 'POST'):
+                    return request.POST.get(param_name, default)
+                else:
+                    # Flask style
+                    return request.form.get(param_name, default)
+            else:
+                # GET parameters
+                if hasattr(request, 'GET'):
+                    return request.GET.get(param_name, default)
+                else:
+                    # Flask style
+                    return request.args.get(param_name, default)
+        except Exception:
+            return default
+
+    def _has_post_data(self):
+        """Check if request has POST data"""
+        try:
+            if hasattr(request, 'POST'):
+                return bool(request.POST)
+            else:
+                return bool(request.form)
+        except Exception:
+            return False
+
+    def _url_for_datarequest(self, action, **kwargs):
+        """Helper to generate URLs compatible with both Flask and Pylons"""
+        from ckanext.datarequests import constants
+        
+        # Map actions to direct paths to avoid routing issues
+        action_paths = {
+            'index': '/' + constants.DATAREQUESTS_MAIN_PATH,
+            'show': '/' + constants.DATAREQUESTS_MAIN_PATH + '/' + kwargs.get('id', ''),
+            'comment': '/' + constants.DATAREQUESTS_MAIN_PATH + '/comment/' + kwargs.get('id', ''),
+            'new': '/' + constants.DATAREQUESTS_MAIN_PATH + '/new',
+            'update': '/' + constants.DATAREQUESTS_MAIN_PATH + '/edit/' + kwargs.get('id', ''),
+            'delete': '/' + constants.DATAREQUESTS_MAIN_PATH + '/delete/' + kwargs.get('id', ''),
+            'close': '/' + constants.DATAREQUESTS_MAIN_PATH + '/close/' + kwargs.get('id', ''),
+        }
+        
+        try:
+            # Try Flask-style Blueprint routing first
+            endpoint = 'datarequests.' + action
+            return helpers.url_for(endpoint, **kwargs)
+        except Exception:
+            # Use direct path construction as fallback
+            if action in action_paths:
+                return action_paths[action]
+            else:
+                # Generic path construction for unknown actions
+                path = '/' + constants.DATAREQUESTS_MAIN_PATH
+                if 'id' in kwargs:
+                    path += '/' + action + '/' + kwargs['id']
+                else:
+                    path += '/' + action
+                return path
 
     def _get_context(self):
-        return {'model': model, 'session': model.Session,
-                'user': c.user, 'auth_user_obj': c.userobj}
+        try:
+            return {'model': model, 'session': model.Session,
+                    'user': c.user, 'auth_user_obj': c.userobj}
+        except AttributeError:
+            # For Flask context
+            from flask import g
+            try:
+                return {'model': model, 'session': model.Session,
+                        'user': g.user, 'auth_user_obj': g.userobj}
+            except AttributeError:
+                return {'model': model, 'session': model.Session,
+                        'user': getattr(c, 'user', None), 
+                        'auth_user_obj': getattr(c, 'userobj', None)}
 
     def _show_index(self, user_id, organization_id, include_organization_facet, url_func, file_to_render):
 
@@ -99,16 +207,16 @@ class DataRequestsUI(base.BaseController):
 
         try:
             context = self._get_context()
-            page = int(request.GET.get('page', 1))
+            page = int(self._get_request_param('page', 1))
             limit = constants.DATAREQUESTS_PER_PAGE
             offset = (page - 1) * constants.DATAREQUESTS_PER_PAGE
             data_dict = {'offset': offset, 'limit': limit}
 
-            state = request.GET.get('state', None)
+            state = self._get_request_param('state', '')
             if state:
                 data_dict['closed'] = True if state == 'closed' else False
 
-            q = request.GET.get('q', '')
+            q = self._get_request_param('q', '')
             if q:
                 data_dict['q'] = q
 
@@ -118,7 +226,7 @@ class DataRequestsUI(base.BaseController):
             if user_id:
                 data_dict['user_id'] = user_id
 
-            sort = request.GET.get('sort', 'desc')
+            sort = self._get_request_param('sort', 'desc')
             sort = sort if sort in ['asc', 'desc'] else 'desc'
             if sort is not None:
                 data_dict['sort'] = sort
@@ -159,22 +267,22 @@ class DataRequestsUI(base.BaseController):
             tk.abort(403, tk._('Unauthorized to list Data Requests'))
 
     def index(self):
-        return self._show_index(None, request.GET.get('organization', ''), True, search_url, 'datarequests/index.html')
+        return self._show_index(None, self._get_request_param('organization', ''), True, search_url, 'datarequests/index.html')
 
     def _process_post(self, action, context):
         # If the user has submitted the form, the data request must be created
-        if request.POST:
+        if self._has_post_data():
             data_dict = {}
-            data_dict['title'] = request.POST.get('title', '')
-            data_dict['description'] = request.POST.get('description', '')
-            data_dict['organization_id'] = request.POST.get('organization_id', '')
+            data_dict['title'] = self._get_request_param('title', '', is_post=True)
+            data_dict['description'] = self._get_request_param('description', '', is_post=True)
+            data_dict['organization_id'] = self._get_request_param('organization_id', '', is_post=True)
 
             if action == constants.UPDATE_DATAREQUEST:
-                data_dict['id'] = request.POST.get('id', '')
+                data_dict['id'] = self._get_request_param('id', '', is_post=True)
 
             try:
                 result = tk.get_action(action)(context, data_dict)
-                tk.redirect_to(helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI', action='show', id=result['id']))
+                tk.redirect_to(self._url_for_datarequest('show', id=result['id']))
 
             except tk.ValidationError as e:
                 log.warn(e)
@@ -258,7 +366,7 @@ class DataRequestsUI(base.BaseController):
             tk.check_access(constants.DELETE_DATAREQUEST, context, data_dict)
             datarequest = tk.get_action(constants.DELETE_DATAREQUEST)(context, data_dict)
             helpers.flash_notice(tk._('Data Request %s has been deleted') % datarequest.get('title', ''))
-            tk.redirect_to(helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI', action='index'))
+            tk.redirect_to(self._url_for_datarequest('index'))
         except tk.ObjectNotFound as e:
             log.warn(e)
             tk.abort(404, tk._('Data Request %s not found') % id)
@@ -277,7 +385,7 @@ class DataRequestsUI(base.BaseController):
         context = self._get_context()
         c.user_dict = tk.get_action('user_show')(context, {'id': id, 'include_num_followers': True})
         url_func = functools.partial(user_datarequest_url, id=id)
-        return self._show_index(id, request.GET.get('organization', ''), True, url_func, 'user/datarequests.html')
+        return self._show_index(id, self._get_request_param('organization', ''), True, url_func, 'user/datarequests.html')
 
     def close(self, id):
         data_dict = {'id': id}
@@ -313,13 +421,13 @@ class DataRequestsUI(base.BaseController):
 
             if c.datarequest.get('closed', False):
                 tk.abort(403, tk._('This data request is already closed'))
-            elif request.POST:
+            elif self._has_post_data():
                 data_dict = {}
-                data_dict['accepted_dataset_id'] = request.POST.get('accepted_dataset_id', None)
+                data_dict['accepted_dataset_id'] = self._get_request_param('accepted_dataset_id', None, is_post=True)
                 data_dict['id'] = id
 
                 tk.get_action(constants.CLOSE_DATAREQUEST)(context, data_dict)
-                tk.redirect_to(helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI', action='show', id=data_dict['id']))
+                tk.redirect_to(self._url_for_datarequest('show', id=data_dict['id']))
             else:   # GET
                 return _return_page()
 
@@ -345,10 +453,10 @@ class DataRequestsUI(base.BaseController):
             # Raises 404 Not Found if the data request does not exist
             c.datarequest = tk.get_action(constants.SHOW_DATAREQUEST)(context, data_dict_dr_show)
 
-            comment_text = request.POST.get('comment', '')
-            comment_id = request.POST.get('comment-id', '')
+            comment_text = self._get_request_param('comment', '', is_post=True)
+            comment_id = self._get_request_param('comment-id', '', is_post=True)
 
-            if request.POST:
+            if self._has_post_data():
                 action = constants.COMMENT_DATAREQUEST
                 action_text = 'comment'
 
@@ -410,7 +518,7 @@ class DataRequestsUI(base.BaseController):
             tk.check_access(constants.DELETE_DATAREQUEST_COMMENT, context, data_dict)
             tk.get_action(constants.DELETE_DATAREQUEST_COMMENT)(context, data_dict)
             helpers.flash_notice(tk._('Comment has been deleted'))
-            tk.redirect_to(helpers.url_for(controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI', action='comment', id=datarequest_id))
+            tk.redirect_to(self._url_for_datarequest('comment', id=datarequest_id))
         except tk.ObjectNotFound as e:
             log.warn(e)
             tk.abort(404, tk._('Comment %s not found') % comment_id)
