@@ -230,7 +230,7 @@ class DataRequestsPlugin(p.SingletonPlugin):
         blueprint = Blueprint('datarequests', __name__)
         
         def _make_controller_wrapper(action_name):
-            def wrapper(*args, **kwargs):
+            def wrapper(**kwargs):
                 try:
                     from ckanext.datarequests.controllers.ui_controller import DataRequestsUI
                     controller = DataRequestsUI()
@@ -250,8 +250,8 @@ class DataRequestsPlugin(p.SingletonPlugin):
                     
                     def patched_url_for(*url_args, **url_kwargs):
                         # Check if this is an old-style datarequest controller call
-                        controller = url_kwargs.get('controller', '')
-                        if 'datarequests.controllers.ui_controller:DataRequestsUI' in controller:
+                        controller_arg = url_kwargs.get('controller', '')
+                        if 'datarequests.controllers.ui_controller:DataRequestsUI' in controller_arg:
                             action = url_kwargs.get('action', '')
                             # Remove controller from kwargs and try Blueprint routing
                             clean_kwargs = {k: v for k, v in url_kwargs.items() if k not in ['controller', 'action']}
@@ -264,7 +264,19 @@ class DataRequestsPlugin(p.SingletonPlugin):
                     tk.url_for = patched_url_for
                     
                     try:
-                        result = method(*args, **kwargs)
+                        # Call method with appropriate arguments based on action
+                        if action_name in ['show', 'update', 'delete', 'close', 'follow', 'unfollow', 'comment']:
+                            # These methods expect an 'id' parameter
+                            result = method(kwargs.get('id'))
+                        elif action_name == 'delete_comment':
+                            # This method expects datarequest_id and comment_id
+                            result = method(kwargs.get('datarequest_id'), kwargs.get('comment_id'))
+                        elif action_name in ['organization_datarequests', 'user_datarequests']:
+                            # These methods expect an 'id' parameter for organization/user
+                            result = method(kwargs.get('id'))
+                        else:
+                            # Methods like index, new don't need parameters
+                            result = method()
                     finally:
                         # Restore original url_for
                         h.url_for = original_url_for
@@ -274,7 +286,9 @@ class DataRequestsPlugin(p.SingletonPlugin):
                 except Exception as e:
                     import logging
                     log = logging.getLogger(__name__)
-                    log.error('Error in controller wrapper (%s): %s', action_name, e)
+                    log.error('Error in controller wrapper (%s): %s', action_name, str(e))
+                    import traceback
+                    log.error('Traceback: %s', traceback.format_exc())
                     from flask import abort
                     abort(500)
             return wrapper
