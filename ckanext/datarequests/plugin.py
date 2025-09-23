@@ -355,6 +355,7 @@ class DataRequestsPlugin(p.SingletonPlugin):
             'get_open_datarequests_number': helpers.get_open_datarequests_number,
             'get_open_datarequests_badge': partial(helpers.get_open_datarequests_badge, self._show_datarequests_badge),
             'get_plus_icon': get_plus_icon,
+            'get_question_icon': get_question_icon,
             'is_following_datarequest': helpers.is_following_datarequest,
             'datarequest_url_for': helpers.datarequest_url_for
         }

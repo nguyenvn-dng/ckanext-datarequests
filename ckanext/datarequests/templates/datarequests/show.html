@@ -22,11 +22,23 @@
 {% endblock %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('show_datarequest', _('Data Request'), id=datarequest_id) }}
-
-  {% if h.show_comments_tab() %}
-    {{ h.build_nav_icon('comment_datarequest', _('Comments') + ' ' + h.get_comments_badge(datarequest_id), id=datarequest_id) }}
-  {% endif %}
+  {% set current_url = request.environ.PATH_INFO %}
+  <ul class="nav nav-tabs">
+    <li{% if '/comment/' not in current_url %} class="active"{% endif %}>
+      <a href="{{ h.datarequest_url_for('show', id=datarequest_id) }}">
+        <i class="icon-{{ h.get_question_icon() }} fa fa-{{ h.get_question_icon() }}"></i>
+        {{ _('Data Request') }}
+      </a>
+    </li>
+    {% if h.show_comments_tab() %}
+    <li{% if '/comment/' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.datarequest_url_for('comment', id=datarequest_id) }}">
+        <i class="icon-comment fa fa-comment"></i>
+        {{ _('Comments') }} {{ h.get_comments_badge(datarequest_id)|safe }}
+      </a>
+    </li>
+    {% endif %}
+  </ul>
 {% endblock %}
 
 {% block secondary_content %}
