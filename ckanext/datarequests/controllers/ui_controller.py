@@ -554,7 +554,7 @@ class DataRequestsUI(BaseClass):
             helpers.flash_error(flash_message)
         
         # Redirect back to the data request page
-        tk.redirect_to(helpers.datarequest_url_for('show', id=datarequest_id))
+        tk.redirect_to(self._url_for_datarequest('show', id=datarequest_id))
 
     def unfollow(self, datarequest_id):
         context = self._get_context()
@@ -579,5 +579,5 @@ class DataRequestsUI(BaseClass):
             helpers.flash_error(flash_message)
         
         # Redirect back to the data request page
-        tk.redirect_to(helpers.datarequest_url_for('show', id=datarequest_id))
+        tk.redirect_to(self._url_for_datarequest('show', id=datarequest_id))
         
