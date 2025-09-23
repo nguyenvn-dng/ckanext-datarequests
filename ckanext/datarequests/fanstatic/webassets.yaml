@@ -1,0 +1,11 @@
+datarequest-js:
+  filter: jsmin
+  output: ckanext-datarequests-%(version)s.js
+  contents:
+    - edit_comment.js
+
+datarequest-css:
+  filter: cssrewrite
+  output: ckanext-datarequests-%(version)s.css
+  contents:
+    - datarequests.css

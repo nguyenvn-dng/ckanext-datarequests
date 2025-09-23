@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with CKAN Data Requests Extension. If not, see <http://www.gnu.org/licenses/>.
 
-import constants
+from ckanext.datarequests import constants
 import sqlalchemy as sa
 import uuid
 
@@ -33,11 +33,26 @@ def uuid4():
     return str(uuid.uuid4())
 
 
+def ensure_initialized():
+    """Ensure database is initialized when first needed"""
+    global DataRequest
+    if DataRequest is None:
+        try:
+            import ckan.model as model
+            init_db(model)
+        except Exception:
+            pass
+
+
 def init_db(model):
 
     global DataRequest
     global Comment
     global DataRequestFollower
+
+    # Ensure we have a proper database engine
+    if not model.meta.engine:
+        return
 
     if DataRequest is None:
 
@@ -100,7 +115,18 @@ def init_db(model):
         )
 
         # Create the table only if it does not exist
-        datarequests_table.create(checkfirst=True)
+        try:
+            # For modern CKAN versions, use the engine from metadata
+            engine = model.meta.engine or model.meta.metadata.bind
+            if engine and not engine.has_table(datarequests_table.name):
+                datarequests_table.create(engine, checkfirst=True)
+        except Exception:
+            try:
+                # Fallback method for older CKAN versions
+                datarequests_table.create(checkfirst=True)
+            except Exception:
+                # If table creation fails, we'll skip it and let it be created later
+                pass
 
         model.meta.mapper(DataRequest, datarequests_table,)
 
@@ -140,7 +166,18 @@ def init_db(model):
         )
 
         # Create the table only if it does not exist
-        comments_table.create(checkfirst=True)
+        try:
+            # For modern CKAN versions, use the engine from metadata
+            engine = model.meta.engine or model.meta.metadata.bind
+            if engine and not engine.has_table(comments_table.name):
+                comments_table.create(engine, checkfirst=True)
+        except Exception:
+            try:
+                # Fallback method for older CKAN versions
+                comments_table.create(checkfirst=True)
+            except Exception:
+                # If table creation fails, we'll skip it and let it be created later
+                pass
 
         model.meta.mapper(Comment, comments_table,)
 
@@ -171,7 +208,18 @@ def init_db(model):
         )
 
         # Create the table only if it does not exist
-        followers_table.create(checkfirst=True)
+        try:
+            # For modern CKAN versions, use the engine from metadata
+            engine = model.meta.engine or model.meta.metadata.bind
+            if engine and not engine.has_table(followers_table.name):
+                followers_table.create(engine, checkfirst=True)
+        except Exception:
+            try:
+                # Fallback method for older CKAN versions
+                followers_table.create(checkfirst=True)
+            except Exception:
+                # If table creation fails, we'll skip it and let it be created later
+                pass
 
         model.meta.mapper(DataRequestFollower, followers_table,)
 
