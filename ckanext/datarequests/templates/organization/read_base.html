@@ -1,13 +1,13 @@
-{% ck    <li{% if '/datarequest' not in current_url and '/activity' not in current_url %} class="active"{% endif %}>
+{% ck    <li{% if '/about' not in current_url and '/datarequest' not in current_url %} class="active"{% endif %}>
       <a href="{{ h.url_for('organization.read', id=organization.name) }}">
         <i class="icon-sitemap fa fa-sitemap"></i>
         {{ _('Datasets') }}
       </a>
     </li>
-    <li{% if '/activity' in current_url %} class="active"{% endif %}>
-      <a href="{{ h.url_for('organization.about', id=organization.name) }}">
+    <li{% if '/about' in current_url %} class="active"{% endif %}>
+      <a href="/organization/{{ organization.name }}/about">
         <i class="icon-clock-o fa fa-clock-o"></i>
-        {{ _('Activity Stream') }}
+        {{ _('About') }}
       </a>
     </li>}
 

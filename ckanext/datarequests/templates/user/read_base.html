@@ -1,4 +1,9 @@
-{% ckan_extends %}
+{% ck    <li{% if '/dashboard' not in current_url and '/datarequest' not in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('user.read', id=user.name) }}">
+        <i class="icon-sitemap fa fa-sitemap"></i>
+        {{ _('Datasets') }}
+      </a>
+    </li>ends %}
 
 {% block content_primary_nav %}
   {% set current_url = request.environ.PATH_INFO %}
@@ -9,8 +14,8 @@
         {{ _('Datasets') }}
       </a>
     </li>
-    <li{% if '/activity' in current_url %} class="active"{% endif %}>
-      <a href="{{ h.url_for('dashboard.index') }}">
+    <li{% if '/dashboard' in current_url %} class="active"{% endif %}>
+      <a href="/dashboard">
         <i class="icon-clock-o fa fa-clock-o"></i>
         {{ _('Activity Stream') }}
       </a>
