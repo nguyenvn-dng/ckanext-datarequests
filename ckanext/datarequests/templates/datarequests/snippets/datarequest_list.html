@@ -13,7 +13,7 @@
     <p class="empty">
       {{ _('No Data Requests found with the given criteria') }}.
       {% if h.check_access('create_datarequest') %}
-        {% link_for _('How about creating one?'), controller='ckanext.datarequests.controllers.ui_controller:DataRequestsUI', action='new' %}</a>
+        <a href="{{ h.datarequest_url_for('new') }}">{{ _('How about creating one?') }}</a>
       {% endif %}
     </p>
   {% endif %}
