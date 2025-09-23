@@ -1,5 +1,38 @@
 {% import 'macros/form.html' as form %}
-{% resource "datarequest/edit_comment.js" %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var UPDATE_COMMENT_BASIC_ID = 'update-comment-';
+    var DISCARD_COMMENT_BASIC_ID = 'comment-discard-';
+
+    $("[id^=" + UPDATE_COMMENT_BASIC_ID + "]").on('click', function(e) {
+        var comment_id = $(this).attr('id').replace(UPDATE_COMMENT_BASIC_ID, '');
+
+        if ($('#comment-' + comment_id).hasClass('hide')) {
+            $('#' + DISCARD_COMMENT_BASIC_ID + comment_id).click();
+        } else {
+            $('#comment-' + comment_id).addClass('hide');
+            $('#comment-form-' + comment_id).removeClass('hide');
+        }
+    });
+
+    $("[id^=" + DISCARD_COMMENT_BASIC_ID + "]").on('click', function(e) {
+        var comment_id = $(this).attr('id').replace(DISCARD_COMMENT_BASIC_ID, '');
+
+        $('#comment-' + comment_id).removeClass('hide');
+        $('#comment-form-' + comment_id).addClass('hide');
+
+        e.preventDefault();
+    });
+
+    var anchorName = 'comment_focus';
+    if ($('[name="' + anchorName + '"]').length) {
+        $('html, body').animate({
+            scrollTop: $('[name="' + anchorName + '"]').offset().top - 50
+        }, 1000);
+    }
+});
+</script>
 
 <form class="dataset-form {{ 'comment-edit-form' if comment_id else 'comment-wrapper' }} {{ 'hide' if comment_id and not (focus and errors) }} form-horizontal" id="comment-form{{ '-' + comment_id if comment_id }}" method="post" data-module="basic-form" action enctype="multipart/form-data">
   {{ h.csrf_input() if 'csrf_input' in h }}
