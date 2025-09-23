@@ -23,7 +23,7 @@ import ckan.model as model
 import ckan.plugins as plugins
 from ckanext.datarequests import constants
 import datetime
-import cgi
+import html
 from ckanext.datarequests import db
 import logging
 from ckanext.datarequests import validator
@@ -127,7 +127,7 @@ def _dictize_comment(comment):
 
 
 def _undictize_comment_basic(comment, data_dict):
-    comment.comment = cgi.escape(data_dict.get('comment', ''))
+    comment.comment = html.escape(data_dict.get('comment', ''))
     comment.datarequest_id = data_dict.get('datarequest_id', '')
 
 
