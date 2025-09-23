@@ -38,7 +38,7 @@ setup(
     download_url='https://github.com/conwetlab/ckanext-datarequests/tarball/v' + version,
     license='GNU Affero General Public License',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    namespace_packages=['ckanext', 'ckanext.datarequests'],
+    namespace_packages=['ckanext'],
     include_package_data=True,
     zip_safe=False,
     setup_requires=['nose>=1.3.0'],
