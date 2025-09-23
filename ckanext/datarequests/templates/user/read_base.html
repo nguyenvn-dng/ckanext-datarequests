@@ -1,10 +1,25 @@
 {% ckan_extends %}
 
 {% block content_primary_nav %}
-  {% set user_datasets_nav = 'user_datasets' if h.ckan_version()[:3] <= '2.7' else 'user.read' %}
-  {% set user_activity_nav = 'user_activity_stream' if h.ckan_version()[:3] <= '2.7' else 'user.activity' %}
-
-  {{ h.build_nav_icon(user_datasets_nav, _('Datasets'), id=user.name) }}
-  {{ h.build_nav_icon(user_activity_nav, _('Activity Stream'), id=user.name) }}
-  {{ h.build_nav_icon('user_datarequests', _('Data Requests'), id=user.name) }}
+  {% set current_url = request.environ.PATH_INFO %}
+  <ul class="nav nav-tabs">
+    <li{% if '/activity' not in current_url and '/datarequest' not in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('user.read', id=user.name) }}">
+        <i class="icon-sitemap fa fa-sitemap"></i>
+        {{ _('Datasets') }}
+      </a>
+    </li>
+    <li{% if '/activity' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('user.activity', id=user.name) }}">
+        <i class="icon-clock-o fa fa-clock-o"></i>
+        {{ _('Activity Stream') }}
+      </a>
+    </li>
+    <li{% if '/datarequest' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('datarequests.user_datarequests', id=user.name) }}">
+        <i class="icon-{{ h.get_question_icon() }} fa fa-{{ h.get_question_icon() }}"></i>
+        {{ _('Data Requests') }}
+      </a>
+    </li>
+  </ul>
 {% endblock %}

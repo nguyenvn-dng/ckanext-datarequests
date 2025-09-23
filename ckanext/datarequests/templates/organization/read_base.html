@@ -1,8 +1,31 @@
 {% ckan_extends %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('organization_read', _('Datasets'), id=c.group_dict.name) }}
-  {{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, offset=0) }}
-  {{ h.build_nav_icon('organization_datarequests', _('Data Requests'), id=c.group_dict.name)}}
-  {{ h.build_nav_icon('organization_about', _('About'), id=c.group_dict.name) }}
+  {% set current_url = request.environ.PATH_INFO %}
+  <ul class="nav nav-tabs">
+    <li{% if '/activity' not in current_url and '/datarequest' not in current_url and '/about' not in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('organization.read', id=c.group_dict.name) }}">
+        <i class="icon-sitemap fa fa-sitemap"></i>
+        {{ _('Datasets') }}
+      </a>
+    </li>
+    <li{% if '/activity' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('organization.activity', id=c.group_dict.name) }}">
+        <i class="icon-clock-o fa fa-clock-o"></i>
+        {{ _('Activity Stream') }}
+      </a>
+    </li>
+    <li{% if '/datarequest' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('datarequests.organization_datarequests', id=c.group_dict.name) }}">
+        <i class="icon-{{ h.get_question_icon() }} fa fa-{{ h.get_question_icon() }}"></i>
+        {{ _('Data Requests') }}
+      </a>
+    </li>
+    <li{% if '/about' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('organization.about', id=c.group_dict.name) }}">
+        <i class="icon-info-sign fa fa-info-circle"></i>
+        {{ _('About') }}
+      </a>
+    </li>
+  </ul>
 {% endblock %}
