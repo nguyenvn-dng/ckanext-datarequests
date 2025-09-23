@@ -453,6 +453,11 @@ class DataRequestsUI(BaseClass):
             # Raises 404 Not Found if the data request does not exist
             c.datarequest = tk.get_action(constants.SHOW_DATAREQUEST)(context, data_dict_dr_show)
 
+            # Initialize variables
+            c.errors = {}
+            c.errors_summary = {}
+            c.updated_comment = None
+
             comment_text = self._get_request_param('comment', '', is_post=True)
             comment_id = self._get_request_param('comment-id', '', is_post=True)
 
