@@ -29,7 +29,7 @@
         }
         
         var tabLink = document.createElement('a');
-        tabLink.href = '{{ h.url_for("datarequests.organization_datarequests", id=organization.name) }}';
+        tabLink.href = '{{ h.url_for("datarequests.organization_datarequests", id=group_dict.name) }}';
         tabLink.innerHTML = '<i class="icon-{{ h.get_question_icon() }} fa fa-{{ h.get_question_icon() }}"></i> {{ _("Data Requests") }}';
         
         dataRequestTab.appendChild(tabLink);

@@ -257,7 +257,17 @@ class DataRequestsUI(BaseClass):
             if include_organization_facet is True:
                 c.facet_titles['organization'] = tk._('Organizations')
 
-            return tk.render(file_to_render, extra_vars={'user_dict': c.user_dict if hasattr(c, 'user_dict') else None, 'group_type': 'organization'})
+            extra_vars = {
+                'user_dict': c.user_dict if hasattr(c, 'user_dict') else None, 
+                'group_type': 'organization'
+            }
+            
+            # Pass group_dict nếu có sẵn (cho organization pages)
+            if hasattr(c, 'group_dict') and c.group_dict:
+                extra_vars['group_dict'] = c.group_dict
+                extra_vars['organization'] = c.group_dict
+                
+            return tk.render(file_to_render, extra_vars=extra_vars)
         except ValueError as e:
             # This exception should only occur if the page value is not valid
             log.warn(e)
