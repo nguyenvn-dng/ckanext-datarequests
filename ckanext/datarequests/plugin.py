@@ -322,7 +322,7 @@ class DataRequestsPlugin(p.SingletonPlugin):
                              'organization_datarequests', _make_controller_wrapper('organization_datarequests'), methods=['GET'])
         
         # Data Request that belongs to a user
-        blueprint.add_url_rule('/user/%s/<id>' % constants.DATAREQUESTS_MAIN_PATH,
+        blueprint.add_url_rule('/user/<id>/%s' % constants.DATAREQUESTS_MAIN_PATH,
                              'user_datarequests', _make_controller_wrapper('user_datarequests'), methods=['GET'])
         
         # Follow & Unfollow
