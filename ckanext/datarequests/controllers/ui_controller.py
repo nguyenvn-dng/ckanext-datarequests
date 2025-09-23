@@ -532,10 +532,52 @@ class DataRequestsUI(BaseClass):
             tk.abort(403, tk._('You are not authorized to delete this comment'))
 
     def follow(self, datarequest_id):
-        # Method is not called
-        pass
+        context = self._get_context()
+        data_dict = {'id': datarequest_id}
+        
+        try:
+            tk.check_access(constants.FOLLOW_DATAREQUEST, context, data_dict)
+            tk.get_action(constants.FOLLOW_DATAREQUEST)(context, data_dict)
+            
+            flash_message = tk._('You are now following this data request')
+            helpers.flash_notice(flash_message)
+            
+        except tk.ObjectNotFound as e:
+            log.warn(e)
+            tk.abort(404, tk._('Data Request not found'))
+        except tk.NotAuthorized as e:
+            log.warn(e)
+            tk.abort(403, tk._('You are not authorized to follow this data request'))
+        except Exception as e:
+            log.error('Error following data request: %s', str(e))
+            flash_message = tk._('An error occurred while following this data request')
+            helpers.flash_error(flash_message)
+        
+        # Redirect back to the data request page
+        tk.redirect_to(helpers.datarequest_url_for('show', id=datarequest_id))
 
     def unfollow(self, datarequest_id):
-        # Method is not called
-        pass
+        context = self._get_context()
+        data_dict = {'id': datarequest_id}
+        
+        try:
+            tk.check_access(constants.UNFOLLOW_DATAREQUEST, context, data_dict)
+            tk.get_action(constants.UNFOLLOW_DATAREQUEST)(context, data_dict)
+            
+            flash_message = tk._('You are no longer following this data request')
+            helpers.flash_notice(flash_message)
+            
+        except tk.ObjectNotFound as e:
+            log.warn(e)
+            tk.abort(404, tk._('Data Request not found'))
+        except tk.NotAuthorized as e:
+            log.warn(e)
+            tk.abort(403, tk._('You are not authorized to unfollow this data request'))
+        except Exception as e:
+            log.error('Error unfollowing data request: %s', str(e))
+            flash_message = tk._('An error occurred while unfollowing this data request')
+            helpers.flash_error(flash_message)
+        
+        # Redirect back to the data request page
+        tk.redirect_to(helpers.datarequest_url_for('show', id=datarequest_id))
         
