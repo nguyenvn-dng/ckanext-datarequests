@@ -1,4 +1,15 @@
-{% ckan_extends %}
+{% ck    <li{% if '/datarequest' not in current_url and '/activity' not in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('organization.read', id=organization.name) }}">
+        <i class="icon-sitemap fa fa-sitemap"></i>
+        {{ _('Datasets') }}
+      </a>
+    </li>
+    <li{% if '/activity' in current_url %} class="active"{% endif %}>
+      <a href="{{ h.url_for('organization.activity', id=organization.name) }}">
+        <i class="icon-clock-o fa fa-clock-o"></i>
+        {{ _('Activity Stream') }}
+      </a>
+    </li>}
 
 {% block content_primary_nav %}
   {% set current_url = request.environ.PATH_INFO %}
