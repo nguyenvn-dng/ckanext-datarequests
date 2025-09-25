@@ -1,0 +1,366 @@
+# Vietnamese translations for ckanext-datarequests.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the ckanext-datarequests
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-datarequests 1.1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-09-25 14:45+0700\n"
+"PO-Revision-Date: 2025-09-25 14:45+0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ckanext/datarequests/actions.py:192 ckanext/datarequests/actions.py:244
+#: ckanext/datarequests/actions.py:435 ckanext/datarequests/actions.py:480
+#: ckanext/datarequests/actions.py:536 ckanext/datarequests/actions.py:624
+msgid "Data Request ID has not been included"
+msgstr "ID Yêu cầu Dữ liệu chưa được bao gồm"
+
+#: ckanext/datarequests/actions.py:203 ckanext/datarequests/actions.py:255
+#: ckanext/datarequests/actions.py:446 ckanext/datarequests/actions.py:491
+#, python-format
+msgid "Data Request %s not found in the data base"
+msgstr "Yêu cầu Dữ liệu %s không tìm thấy trong cơ sở dữ liệu"
+
+#: ckanext/datarequests/actions.py:500
+msgid "This Data Request is already closed"
+msgstr "Yêu cầu Dữ liệu này đã được đóng"
+
+#: ckanext/datarequests/actions.py:578 ckanext/datarequests/actions.py:671
+#: ckanext/datarequests/actions.py:717
+msgid "Comment ID has not been included"
+msgstr "ID Bình luận chưa được bao gồm"
+
+#: ckanext/datarequests/actions.py:589 ckanext/datarequests/actions.py:682
+#: ckanext/datarequests/actions.py:728
+#, python-format
+msgid "Comment %s not found in the data base"
+msgstr "Bình luận %s không tìm thấy trong cơ sở dữ liệu"
+
+#: ckanext/datarequests/validator.py:31 ckanext/datarequests/validator.py:34
+#: ckanext/datarequests/validator.py:41
+#: ckanext/datarequests/templates/datarequests/snippets/datarequest_form.html:17
+msgid "Title"
+msgstr "Tiêu đề"
+
+#: ckanext/datarequests/validator.py:45
+#, python-format
+msgid "Title must be a maximum of %d characters long"
+msgstr "Tiêu đề tối đa %d ký tự"
+
+#: ckanext/datarequests/validator.py:48
+msgid "Title cannot be empty"
+msgstr "Tiêu đề không được để trống"
+
+#: ckanext/datarequests/validator.py:51
+msgid "That title is already in use"
+msgstr "Tiêu đề này đã được sử dụng"
+
+#: ckanext/datarequests/validator.py:55
+#: ckanext/datarequests/templates/datarequests/snippets/datarequest_form.html:25
+msgid "Description"
+msgstr "Mô tả"
+
+#: ckanext/datarequests/validator.py:59
+#, python-format
+msgid "Description must be a maximum of %d characters long"
+msgstr "Mô tả tối đa %d ký tự"
+
+#: ckanext/datarequests/validator.py:65
+#: ckanext/datarequests/templates/datarequests/snippets/datarequest_form.html:33
+msgid "Organization"
+msgstr "Tổ chức"
+
+#: ckanext/datarequests/validator.py:68
+msgid "Organization is not valid"
+msgstr "Tổ chức không hợp lệ"
+
+#: ckanext/datarequests/validator.py:73
+#: ckanext/datarequests/templates/datarequests/snippets/close_datarequest_form.html:10
+msgid "Accepted Dataset"
+msgstr "Bộ dữ liệu được chấp nhận"
+
+#: ckanext/datarequests/validator.py:76
+msgid "Dataset not found"
+msgstr "Không tìm thấy bộ dữ liệu"
+
+#: ckanext/datarequests/validator.py:82
+#: ckanext/datarequests/templates/datarequests/snippets/comment_form.html:10
+msgid "Data Request"
+msgstr "Yêu cầu Dữ liệu"
+
+#: ckanext/datarequests/validator.py:85
+msgid "Data Request not found"
+msgstr "Không tìm thấy Yêu cầu Dữ liệu"
+
+#: ckanext/datarequests/validator.py:89
+#: ckanext/datarequests/templates/datarequests/snippets/comment_form.html:19
+msgid "Comment"
+msgstr "Bình luận"
+
+#: ckanext/datarequests/validator.py:92
+msgid "Comments must be a minimum of 1 character long"
+msgstr "Bình luận phải có ít nhất 1 ký tự"
+
+#: ckanext/datarequests/controllers/ui_controller.py:96
+msgid "Data Requests"
+msgstr "Yêu cầu Dữ liệu"
+
+#: ckanext/datarequests/controllers/ui_controller.py:103
+msgid "Your Data Request has been successfully created"
+msgstr "Yêu cầu Dữ liệu của bạn đã được tạo thành công"
+
+#: ckanext/datarequests/controllers/ui_controller.py:150
+msgid "Data Request has been successfully updated"
+msgstr "Yêu cầu Dữ liệu đã được cập nhật thành công"
+
+#: ckanext/datarequests/controllers/ui_controller.py:208
+msgid "Data Request has been successfully deleted"
+msgstr "Yêu cầu Dữ liệu đã được xóa thành công"
+
+#: ckanext/datarequests/controllers/ui_controller.py:234
+msgid "Data Request has been successfully closed"
+msgstr "Yêu cầu Dữ liệu đã được đóng thành công"
+
+#: ckanext/datarequests/controllers/ui_controller.py:288
+msgid "Comment has been published"
+msgstr "Bình luận đã được đăng"
+
+#: ckanext/datarequests/controllers/ui_controller.py:309
+msgid "Comment has been updated"
+msgstr "Bình luận đã được cập nhật"
+
+#: ckanext/datarequests/controllers/ui_controller.py:339
+msgid "Comment has been deleted"
+msgstr "Bình luận đã được xóa"
+
+#: ckanext/datarequests/controllers/ui_controller.py:401
+msgid "You are now following this data request"
+msgstr "Bây giờ bạn đang theo dõi yêu cầu dữ liệu này"
+
+#: ckanext/datarequests/controllers/ui_controller.py:419
+msgid "You are no longer following this data request"
+msgstr "Bạn không còn theo dõi yêu cầu dữ liệu này nữa"
+
+# Templates translations
+msgid "New Data Request"
+msgstr "Yêu cầu Dữ liệu Mới"
+
+msgid "Edit Data Request"
+msgstr "Chỉnh sửa Yêu cầu Dữ liệu"
+
+msgid "Create Data Request"
+msgstr "Tạo Yêu cầu Dữ liệu"
+
+msgid "Update Data Request"
+msgstr "Cập nhật Yêu cầu Dữ liệu"
+
+msgid "Delete Data Request"
+msgstr "Xóa Yêu cầu Dữ liệu"
+
+msgid "Close Data Request"
+msgstr "Đóng Yêu cầu Dữ liệu"
+
+msgid "Open"
+msgstr "Mở"
+
+msgid "Closed"
+msgstr "Đã đóng"
+
+msgid "State"
+msgstr "Trạng thái"
+
+msgid "Organizations"
+msgstr "Tổ chức"
+
+msgid "Follow"
+msgstr "Theo dõi"
+
+msgid "Unfollow"
+msgstr "Bỏ theo dõi"
+
+msgid "Followers"
+msgstr "Người theo dõi"
+
+msgid "follower"
+msgstr "người theo dõi"
+
+msgid "followers"
+msgstr "người theo dõi"
+
+msgid "Created on"
+msgstr "Được tạo vào"
+
+msgid "Last updated"
+msgstr "Cập nhật lần cuối"
+
+msgid "Closed on"
+msgstr "Đóng vào"
+
+msgid "Show more"
+msgstr "Hiển thị thêm"
+
+msgid "Comments"
+msgstr "Bình luận"
+
+msgid "Add Comment"
+msgstr "Thêm Bình luận"
+
+msgid "Edit Comment"
+msgstr "Chỉnh sửa Bình luận"
+
+msgid "Delete Comment"
+msgstr "Xóa Bình luận"
+
+msgid "Post Comment"
+msgstr "Đăng Bình luận"
+
+msgid "Update Comment"
+msgstr "Cập nhật Bình luận"
+
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "Save"
+msgstr "Lưu"
+
+msgid "Delete"
+msgstr "Xóa"
+
+msgid "Edit"
+msgstr "Chỉnh sửa"
+
+msgid "View"
+msgstr "Xem"
+
+msgid "Close"
+msgstr "Đóng"
+
+msgid "No Data Requests found"
+msgstr "Không tìm thấy Yêu cầu Dữ liệu nào"
+
+msgid "No data requests"
+msgstr "Không có yêu cầu dữ liệu"
+
+msgid "Search data requests..."
+msgstr "Tìm kiếm yêu cầu dữ liệu..."
+
+msgid "Search"
+msgstr "Tìm kiếm"
+
+msgid "Clear All"
+msgstr "Xóa Tất cả"
+
+msgid "Order by"
+msgstr "Sắp xếp theo"
+
+msgid "Relevance"
+msgstr "Liên quan"
+
+msgid "Name Ascending"
+msgstr "Tên Tăng dần"
+
+msgid "Name Descending"
+msgstr "Tên Giảm dần"
+
+msgid "Last Modified"
+msgstr "Sửa đổi Lần cuối"
+
+msgid "Popular"
+msgstr "Phổ biến"
+
+msgid "Activity Stream"
+msgstr "Luồng Hoạt động"
+
+msgid "Dashboard"
+msgstr "Bảng điều khiển"
+
+msgid "Datasets"
+msgstr "Bộ dữ liệu"
+
+msgid "About"
+msgstr "Giới thiệu"
+
+msgid "You have no data requests"
+msgstr "Bạn không có yêu cầu dữ liệu nào"
+
+msgid "This organization has no data requests"
+msgstr "Tổ chức này không có yêu cầu dữ liệu nào"
+
+msgid "Request data"
+msgstr "Yêu cầu dữ liệu"
+
+msgid "Are you sure you want to delete this Data Request?"
+msgstr "Bạn có chắc chắn muốn xóa Yêu cầu Dữ liệu này không?"
+
+msgid "Are you sure you want to close this Data Request?"
+msgstr "Bạn có chắc chắn muốn đóng Yêu cầu Dữ liệu này không?"
+
+msgid "Closing reason"
+msgstr "Lý do đóng"
+
+msgid "Please provide an accepted dataset"
+msgstr "Vui lòng cung cấp bộ dữ liệu được chấp nhận"
+
+msgid "Additional Information"
+msgstr "Thông tin Bổ sung"
+
+msgid "Additional information about this data request"
+msgstr "Thông tin bổ sung về yêu cầu dữ liệu này"
+
+msgid "What are Data Requests?"
+msgstr "Yêu cầu Dữ liệu là gì?"
+
+msgid "Data requests are a way for users to ask for datasets that are not currently available on the platform."
+msgstr "Yêu cầu dữ liệu là cách để người dùng yêu cầu các bộ dữ liệu hiện chưa có sẵn trên nền tảng."
+
+msgid "Why create a Data Request?"
+msgstr "Tại sao tạo Yêu cầu Dữ liệu?"
+
+msgid "Data requests help organizations understand what data users need and prioritize their data publishing efforts."
+msgstr "Yêu cầu dữ liệu giúp các tổ chức hiểu người dùng cần dữ liệu gì và ưu tiên nỗ lực xuất bản dữ liệu của họ."
+
+msgid "How to create a Data Request?"
+msgstr "Làm thế nào để tạo Yêu cầu Dữ liệu?"
+
+msgid "Click on 'New Data Request' button and fill in the required information."
+msgstr "Nhấp vào nút 'Yêu cầu Dữ liệu Mới' và điền thông tin cần thiết."
+
+msgid "Email notifications"
+msgstr "Thông báo email"
+
+msgid "New Data Request"
+msgstr "Yêu cầu Dữ liệu Mới"
+
+msgid "New Comment"
+msgstr "Bình luận Mới"
+
+msgid "Data Request Closed"
+msgstr "Yêu cầu Dữ liệu Đã Đóng"
+
+# Email subjects and bodies
+msgid "New data request"
+msgstr "Yêu cầu dữ liệu mới"
+
+msgid "New comment"
+msgstr "Bình luận mới"
+
+msgid "Close data request"
+msgstr "Đóng yêu cầu dữ liệu"
+
+msgid "A new data request has been created"
+msgstr "Một yêu cầu dữ liệu mới đã được tạo"
+
+msgid "A new comment has been posted"
+msgstr "Một bình luận mới đã được đăng"
+
+msgid "A data request has been closed"
+msgstr "Một yêu cầu dữ liệu đã được đóng"
