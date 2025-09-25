@@ -163,8 +163,8 @@ def _send_mail(user_ids, action_type, datarequest):
                 'site_url': config.get('ckan.site_url')
             }
 
-            subject = tk.render('datarequests/emails/subjects/{0}.txt'.format(action_type), extra_vars)
-            body = tk.render('datarequests/emails/bodies/{0}.txt'.format(action_type), extra_vars)
+            subject = tk.render('emails/subjects/{0}.txt'.format(action_type), extra_vars)
+            body = tk.render('emails/bodies/{0}.txt'.format(action_type), extra_vars)
 
             mailer.mail_user(user_data, subject, body)
 

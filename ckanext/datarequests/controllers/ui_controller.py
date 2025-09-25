@@ -437,7 +437,9 @@ class DataRequestsUI(BaseClass):
                 data_dict['id'] = id
 
                 tk.get_action(constants.CLOSE_DATAREQUEST)(context, data_dict)
-                tk.redirect_to(self._url_for_datarequest('show', id=data_dict['id']))
+                flash_message = tk._('Data Request has been successfully closed')
+                helpers.flash_success(flash_message)
+                return tk.redirect_to(self._url_for_datarequest('show', id=data_dict['id']))
             else:   # GET
                 return _return_page()
 
