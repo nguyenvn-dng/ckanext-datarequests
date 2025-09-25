@@ -50,7 +50,7 @@ def is_fontawesome_4():
         ckan_version = float(h.ckan_version()[0:3])
         return ckan_version >= 2.7
     else:
-        return False
+        return True
 
 def get_plus_icon():
     return 'plus-square' if is_fontawesome_4() else 'plus-sign-alt'

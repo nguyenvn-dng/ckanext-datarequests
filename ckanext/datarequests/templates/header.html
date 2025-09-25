@@ -3,8 +3,10 @@
 {% block header_site_navigation_tabs %}
   {{ super() }}
   
-  <li{% if request.environ.PATH_INFO.startswith('/datarequest') %} class="active"{% endif %}>
-    <a href="/datarequest">
+  {% set current_path = request.environ.PATH_INFO %}
+  {% set is_datarequest_active = '/datarequest' in current_path %}
+  <li{% if is_datarequest_active %} class="active"{% endif %}>
+    <a href="{{ h.url_for('datarequests.index') }}">
       {{ _('Data Requests') }}{{ h.get_open_datarequests_badge() }}
     </a>
   </li>
