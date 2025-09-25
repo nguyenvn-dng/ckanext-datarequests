@@ -250,8 +250,8 @@ msgstr "Không tìm thấy Yêu cầu Dữ liệu nào"
 msgid "No data requests"
 msgstr "Không có yêu cầu dữ liệu"
 
-msgid "Search data requests..."
-msgstr "Tìm kiếm yêu cầu dữ liệu..."
+msgid "Search Data Requests..."
+msgstr "Tìm kiếm Yêu cầu dữ liệu..."
 
 msgid "Search"
 msgstr "Tìm kiếm"
@@ -364,3 +364,65 @@ msgstr "Một bình luận mới đã được đăng"
 
 msgid "A data request has been closed"
 msgstr "Một yêu cầu dữ liệu đã được đóng"
+
+#: ckanext/datarequests/templates/datarequests/index.html:9
+#: ckanext/datarequests/templates/organization/datarequests.html:10
+msgid "Add Data Request"
+msgstr "Thêm Yêu cầu dữ liệu"
+
+msgid "Data Requests allow users to ask for data that is not published in the platform yet. If you want some specific data and you are not able to find it among all the published datasets, you can create a new data request specifying the data than you want to get."
+msgstr "Yêu cầu Dữ liệu cho phép người dùng yêu cầu dữ liệu chưa được công bố trên nền tảng. Nếu bạn muốn một dữ liệu cụ thể nào đó nhưng không tìm thấy trong số tất cả các tập dữ liệu đã công bố, bạn có thể tạo một yêu cầu dữ liệu mới, chỉ định dữ liệu bạn muốn nhận."
+
+#: ckanext/datarequests/templates/snippets/custom_search_form.html:8
+msgid "{number} data request found"
+msgid_plural "{number} data requests found"
+msgstr[0] "Tìm thấy {number} yêu cầu dữ liệu"
+msgstr[1] "Tìm thấy {number} yêu cầu dữ liệu"
+
+#: ckanext/datarequests/controllers/ui_controller.py:129
+msgid "Newest"
+msgstr "Mới nhất"
+
+#: ckanext/datarequests/controllers/ui_controller.py:129
+msgid "Oldest"
+msgstr "Cũ nhất"
+
+msgid "To create a data request, fill the form and specify a title and a description for your request. Please, be as clear as you can in order to ease the task of accomplishing your request. You can also specify an organization if your data request is closely related with it."
+msgstr "Để tạo yêu cầu dữ liệu, hãy điền vào biểu mẫu và chỉ định tiêu đề cùng mô tả cho yêu cầu của bạn. Vui lòng cung cấp thông tin càng rõ ràng càng tốt để việc thực hiện yêu cầu được dễ dàng hơn. Bạn cũng có thể chỉ định một tổ chức nếu yêu cầu dữ liệu của bạn có liên quan chặt chẽ đến tổ chức đó."
+
+#: ckanext/datarequests/templates/datarequests/snippets/datarequest_form.html:17
+msgid "eg. Data Request Name"
+msgstr "Tên yêu cầu dữ liệu"
+
+#: ckanext/datarequests/templates/datarequests/snippets/datarequest_form.html:21
+msgid "eg. Data Request description"
+msgstr "Một vài dòng mô tả Yêu cầu dữ liệu"
+
+#: ckanext/datarequests/templates/datarequests/snippets/additional_info.html:7
+msgid "Creator"
+msgstr "Người tạo"
+
+#: ckanext/datarequests/templates/datarequests/snippets/additional_info.html:20
+msgid "Not closed yet"
+msgstr "Chưa đóng"
+
+#: ckanext/datarequests/templates/datarequests/snippets/comments.html:3
+msgid "Current Discussion"
+msgstr "Thảo luận hiện tại"
+
+#: ckanext/datarequests/templates/datarequests/snippets/comment_item.html:29
+msgid "commented"
+msgstr "đã bình luận"
+
+#: ckanext/datarequests/templates/datarequests/snippets/comment_form.html:23
+#, python-format
+msgid ""
+"You can use <a href=\"#markdown\" title=\"Markdown quick reference\" "
+"data-target=\"popover\" data-content=\"%(markdown_tooltip)s\" data-"
+"html=\"true\">Markdown formatting</a> here. You can refer datasets by "
+"adding their URL."
+msgstr ""
+"Bạn có thể sử dụng <a href=\"#markdown\" title=\"Markdown quick reference\" "
+"data-target=\"popover\" data-content=\"%(markdown_tooltip)s\" data-"
+"html=\"true\">Markdown formatting</a> ở đây. Bạn có thể tham chiếu các tập dữ liệu bằng "
+"cách thêm URL của chúng."
