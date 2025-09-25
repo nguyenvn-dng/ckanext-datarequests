@@ -48,7 +48,8 @@ def get_config_bool_value(config_name, default_value=False):
 def is_fontawesome_4():
     if hasattr(h, 'ckan_version'):
         ckan_version = float(h.ckan_version()[0:3])
-        return ckan_version >= 2.7
+        # return ckan_version >= 2.7
+        return True
     else:
         return True
 
