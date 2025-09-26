@@ -285,6 +285,13 @@ class DataRequestsPlugin(p.SingletonPlugin):
                     
                     return result
                 except Exception as e:
+                    # Let HTTP exceptions (like 403, 404, etc.) propagate properly
+                    # These are legitimate HTTP responses, not server errors
+                    from werkzeug.exceptions import HTTPException
+                    if isinstance(e, HTTPException):
+                        raise
+                    
+                    # Only catch and log non-HTTP exceptions as server errors
                     import logging
                     log = logging.getLogger(__name__)
                     log.error('Error in controller wrapper (%s): %s', action_name, str(e))

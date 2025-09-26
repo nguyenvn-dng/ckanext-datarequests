@@ -426,3 +426,17 @@ msgstr ""
 "data-target=\"popover\" data-content=\"%(markdown_tooltip)s\" data-"
 "html=\"true\">Markdown formatting</a> ở đây. Bạn có thể tham chiếu các tập dữ liệu bằng "
 "cách thêm URL của chúng."
+
+#: ckanext/datarequests/templates/datarequests/snippets/additional_info.html:8
+#: ckanext/datarequests/templates/datarequests/snippets/additional_info.html:12
+#: ckanext/datarequests/templates/datarequests/snippets/additional_info.html:29
+msgid "None"
+msgstr "Không"
+
+#: ckanext/datarequests/templates/datarequests/snippets/comments.html:13
+msgid "This data request has not been commented yet"
+msgstr "Yêu cầu dữ liệu này vẫn chưa có bình luận"
+
+#: ckanext/datarequests/templates/datarequests/snippets/comment_form.html:22
+msgid "Add a new Comment"
+msgstr "Thêm bình luận mới"
