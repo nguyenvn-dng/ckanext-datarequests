@@ -33,7 +33,7 @@
     {% if h.show_comments_tab() %}
     <li{% if '/comment/' in current_url %} class="active"{% endif %}>
       <a href="{{ h.datarequest_url_for('comment', id=datarequest_id) }}">
-        <i class="icon-comment fa fa-comment"></i>
+        <i class="fa-jelly fa-regular fa-comment"></i>
         {{ _('Comments') }} {{ h.get_comments_badge(datarequest_id)|safe }}
       </a>
     </li>
@@ -52,18 +52,18 @@
 
 {% block primary_content_inner %}
     {% if c.datarequest.closed %}
-      <span class="uppercase label label-closed pull-right">
+      <span style="padding: 0.5em 1em;" class="uppercase label label-closed pull-right badge badge-default">
         <i class="icon-lock fa fa-lock"></i>
         {{ _('Closed') }}
       </span>
     {% else %}
-      <span class="uppercase label label-open pull-right">
+      <span style="padding: 0.5em 1em;" class="uppercase label label-open pull-right badge badge-default">
         <i class="icon-unlock fa fa-unlock"></i>
         {{ _('Open') }}
       </span>
     {% endif %}
 
-  <h1 class="{% block page_heading_class %}page-heading{% endblock %}">{% block page_heading %}{{ c.datarequest.get('title') }}{% endblock %}</h1>
+  <h3 style="margin-top: 10px;" class="{% block page_heading_class %}page-heading{% endblock %}">{% block page_heading %}{{ c.datarequest.get('title') }}{% endblock %}</h3>
 
   {% block datarequest_description %}
     {% if c.datarequest.get('description') %}
