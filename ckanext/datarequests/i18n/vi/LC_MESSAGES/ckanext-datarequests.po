@@ -406,6 +406,10 @@ msgstr "Người tạo"
 msgid "Not closed yet"
 msgstr "Chưa đóng"
 
+#: ckanext/datarequests/templates/datarequests/snippets/close_datarequest_form.html:11
+msgid "Accep. Dataset"
+msgstr "Bộ dữ liệu đã được chấp nhận"
+
 #: ckanext/datarequests/templates/datarequests/snippets/comments.html:3
 msgid "Current Discussion"
 msgstr "Thảo luận hiện tại"

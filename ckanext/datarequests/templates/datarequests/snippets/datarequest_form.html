@@ -23,7 +23,7 @@ then itself be extended to add/remove blocks of functionality. #}
   {% endblock %}
 
   <div class="control-group form-group">
-    <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
+    <label for="field-organizations" class="form-label">{{ _('Organization') }}</label>
     <div class="controls">
       <select id="field-organizations" name="organization_id" data-module="autocomplete">
         {% if h.check_config_permission('create_unowned_dataset') %}
@@ -45,7 +45,7 @@ then itself be extended to add/remove blocks of functionality. #}
           <a class="btn btn-danger pull-left" href="{{ h.datarequest_url_for('delete', id=data.get('id')) }}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
-      <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{{ _('Create Data Request') }}{% endblock %}</button>
+      <button class="btn btn-primary btn-primary-custom" type="submit" name="save">{% block save_button_text %}{{ _('Create Data Request') }}{% endblock %}</button>
     </div>
   {% endblock %}
 
