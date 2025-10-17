@@ -12,7 +12,7 @@
 {% block content_action %}
 
   {% if h.check_access('update_datarequest', {'id':datarequest_id }) %}
-    <a href="{{ h.datarequest_url_for('update', id=datarequest_id) }}" class="btn btn-default"><i class="icon-wrench fa fa-wrench"></i> {{ _('Manage') }}</a>
+    <a href="{{ h.datarequest_url_for('update', id=datarequest_id) }}" class="btn btn-default btn-default-custom"><i class="icon-wrench fa fa-wrench"></i> {{ _('Manage') }}</a>
   {% endif %}
 
   {% if h.check_access('close_datarequest', {'id':datarequest_id }) and not c.datarequest.closed %}
