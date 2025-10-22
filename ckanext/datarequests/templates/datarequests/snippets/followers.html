@@ -28,7 +28,7 @@
                 <form method="post" action="{{ h.datarequest_url_for('follow', id=datarequest.id) }}" style="display: inline;">
                   {{ h.csrf_input() if 'csrf_input' in h }}
                   <button type="submit" class="{% block unfollowing_class %}btn btn-success{% endblock %}" data-module="follow" data-module-type="datarequest" data-module-id="{{ datarequest.id }}" data-module-action="follow">
-                    <i class="fa fa-plus-circle icon-plus-sign"></i>
+                    <i class="fa fa-plus"></i>
                     {{ _('Follow') }}
                   </button>
                 </form>

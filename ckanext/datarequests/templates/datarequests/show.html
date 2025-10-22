@@ -53,12 +53,12 @@
 {% block primary_content_inner %}
     {% if c.datarequest.closed %}
       <span style="padding: 0.5em 1em;" class="uppercase label label-closed pull-right badge badge-default">
-        <i class="icon-lock fa fa-lock"></i>
+        <i class="icon-lock fa fa-lock" style="margin-right: 5px;"></i>
         {{ _('Closed') }}
       </span>
     {% else %}
       <span style="padding: 0.5em 1em;" class="uppercase label label-open pull-right badge badge-default">
-        <i class="icon-unlock fa fa-unlock"></i>
+        <i class="icon-unlock fa fa-unlock" style="margin-right: 5px;"></i>
         {{ _('Open') }}
       </span>
     {% endif %}
