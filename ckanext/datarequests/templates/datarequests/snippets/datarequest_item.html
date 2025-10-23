@@ -8,13 +8,15 @@
     <div class="dataset-content">
       <h3 class="dataset-heading">
         {% if datarequest.get('closed', False) %}
-          <span class="uppercase label label-closed-list tag-style">
+          <span class="uppercase label label-closed badge badge-default">
             <!-- <i class="icon-lock fa fa-lock"></i>  -->
+             <i class="icon-lock fa fa-lock" style="margin-right: 5px;"></i>
         {% trans %}Closed{% endtrans %}
           </span>
         {% else %}
-          <span class="uppercase label label-open-list tag-style">
+          <span class="uppercase label label-open badge badge-default">
             <!-- <i class="icon-unlock fa fa-unlock"></i>  -->
+             <i class="icon-lock fa fa-lock" style="margin-right: 5px;"></i>
             {% trans %}Open{% endtrans %}
           </span>
         {% endif %}

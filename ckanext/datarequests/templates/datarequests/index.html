@@ -6,7 +6,7 @@
       {% block page_primary_action %}
         {% if h.check_access('create_datarequest') %}
           <div class="page_primary_action">
-            <a href="{{ h.datarequest_url_for('new') }}" class="btn btn-primary btn-primary-custom"><i class="icon-{{ h.get_plus_icon() }} fa fa-{{ h.get_plus_icon() }}"></i> {{ _('Add Data Request') }}</a>
+            <a href="{{ h.datarequest_url_for('new') }}" class="btn btn-primary btn-primary-custom"><i class="fa fa-plus"></i> {{ _('Add Data Request') }}</a>
           </div>
         {% endif %}
         {% snippet 'snippets/custom_search_form.html', query=c.q, fields=(('organization', c.organization), ('state', c.state)), sorting=c.filters, sorting_selected=c.sort, placeholder=_('Search Data Requests...'), no_bottom_border=true, count=c.datarequest_count, no_title=True %}
