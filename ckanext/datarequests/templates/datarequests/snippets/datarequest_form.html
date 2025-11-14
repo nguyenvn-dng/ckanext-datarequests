@@ -45,6 +45,11 @@ then itself be extended to add/remove blocks of functionality. #}
           <a class="btn btn-danger pull-left" href="{{ h.datarequest_url_for('delete', id=data.get('id')) }}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
+      {% if data.get('id') %}
+        <a class="btn btn-default" href="{{ h.datarequest_url_for('show', id=data.get('id')) }}">{{ _('Cancel') }}</a>
+      {% else %}
+        <a class="btn btn-default" href="{{ h.datarequest_url_for('index') }}">{{ _('Cancel') }}</a>
+      {% endif %}
       <button class="btn btn-primary btn-primary-custom" type="submit" name="save">{% block save_button_text %}{{ _('Create Data Request') }}{% endblock %}</button>
     </div>
   {% endblock %}

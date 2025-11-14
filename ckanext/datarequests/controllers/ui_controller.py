@@ -292,7 +292,12 @@ class DataRequestsUI(BaseClass):
 
             try:
                 result = tk.get_action(action)(context, data_dict)
-                tk.redirect_to(self._url_for_datarequest('show', id=result['id']))
+                
+                # For updates, show a success message and redirect back to the show page
+                if action == constants.UPDATE_DATAREQUEST:
+                    helpers.flash_success(tk._('Data Request has been updated successfully'))
+                
+                tk.redirect_to(self._url_for_datarequest('show', id=data_dict['id']))
 
             except tk.ValidationError as e:
                 log.warn(e)
