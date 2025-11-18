@@ -293,11 +293,11 @@ class DataRequestsUI(BaseClass):
             try:
                 result = tk.get_action(action)(context, data_dict)
                 
-                # For updates, show a success message and redirect back to the show page
+                # Show success message and redirect to the show page
                 if action == constants.UPDATE_DATAREQUEST:
                     helpers.flash_success(tk._('Data Request has been updated successfully'))
-                    tk.redirect_to(self._url_for_datarequest('show', id=result['id']))
                 
+                return tk.redirect_to(self._url_for_datarequest('show', id=result['id']))
 
             except tk.ValidationError as e:
                 log.warn(e)
@@ -310,6 +310,8 @@ class DataRequestsUI(BaseClass):
                 }
                 c.errors = e.error_dict
                 c.errors_summary = _get_errors_summary(c.errors)
+        
+        return None
 
     def new(self):
         context = self._get_context()
@@ -322,9 +324,13 @@ class DataRequestsUI(BaseClass):
         # Check access
         try:
             tk.check_access(constants.CREATE_DATAREQUEST, context, None)
-            self._process_post(constants.CREATE_DATAREQUEST, context)
+            
+            # Process POST request if present, otherwise show the form
+            response = self._process_post(constants.CREATE_DATAREQUEST, context)
+            if response:
+                return response
 
-            # The form is always rendered
+            # The form is rendered when there's no POST or validation errors
             return tk.render('datarequests/new.html')
 
         except tk.NotAuthorized as e:
@@ -363,7 +369,12 @@ class DataRequestsUI(BaseClass):
             tk.check_access(constants.UPDATE_DATAREQUEST, context, data_dict)
             c.datarequest = tk.get_action(constants.SHOW_DATAREQUEST)(context, data_dict)
             c.original_title = c.datarequest.get('title')
-            self._process_post(constants.UPDATE_DATAREQUEST, context)
+            
+            # Process POST request if present, otherwise show the form
+            response = self._process_post(constants.UPDATE_DATAREQUEST, context)
+            if response:
+                return response
+            
             return tk.render('datarequests/edit.html')
         except tk.ObjectNotFound as e:
             log.warn(e)
